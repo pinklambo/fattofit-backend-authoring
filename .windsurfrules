@@ -1,0 +1,180 @@
+##################################################################################################
+# FatToFit Program Authoring Platform — .windsurfrules
+##################################################################################################
+
+📘 Introduction  
+App Name: FatToFit Program Authoring  
+Version: 0.1.0  
+Maintainer: PinkLambo  
+Platform: Admin-only authoring tool to define and manage structured workout content for the FatToFit mobile app.
+
+---
+
+## ⚙️ Tech Stack
+
+### 🖥 Frontend
+- Framework: Vue 3  
+- Build Tool: Vite  
+- Language: TypeScript (TS-first)  
+- CSS Framework: Tailwind CSS (v3.4.4)  
+- State Management: Pinia + pinia-plugin-persistedstate  
+- UI Engine: Vue Flow (planned for visual drag-and-drop program builder)
+
+### 🔐 Backend
+- Firebase Authentication (email/password)
+- Firestore (document-based NoSQL for programs, exercises)
+- Firebase SDK (modular Web v9)
+
+---
+
+## 📁 Folder Structure (simplified)
+
+```
+src/
+├── assets/               # Static files (e.g., main.css for Tailwind)
+├── components/           # Vue component library
+├── stores/               # Pinia stores (auth, program authoring)
+├── views/ or pages/      # LoginPage.vue, ProgramAuthor.vue (future)
+├── firebase.ts           # Firebase app init (auth + firestore)
+├── main.ts               # App entry point
+└── App.vue               # Root UI wrapper
+```
+
+---
+
+## 🔧 ESLint + VS Code
+
+- ESLint initialized with Vue 3 + TypeScript + JSON + Browser environment
+- `.eslintrc.js` created using `eslint --init`
+- Optional Tailwind plugin to be added (`eslint-plugin-tailwindcss`)
+- `.vscode/settings.json` configured for:
+  ```json
+  {
+    "editor.codeActionsOnSave": {
+      "source.fixAll.eslint": true
+    },
+    "eslint.validate": ["javascript", "typescript", "vue", "json"]
+  }
+  ```
+
+---
+
+## 🔐 Firebase Configuration
+
+- Firebase installed via `npm install firebase`
+- `src/firebase.ts` configures:
+  - `getAuth()` for email/password login
+  - `getFirestore()` for reading/writing structured content
+
+---
+
+## 🔐 Authentication Strategy
+
+- Email/password authentication enabled
+- Pinia store (`useAuthStore.ts`) tracks:
+  - `firebaseUser`
+  - `login()`, `logout()`, `bindAuthListener()`
+- Optional route guard via Vue Router:
+  ```ts
+  router.beforeEach((to, from, next) => {
+    const authStore = useAuthStore()
+    if (!authStore.firebaseUser && to.meta.requiresAuth) {
+      return next('/login')
+    }
+    next()
+  })
+  ```
+
+---
+
+## 🧠 Firestore Data Model (Authoring Source of Truth)
+
+### 🔘 Collection: `programs`
+```ts
+Program {
+  programId: string
+  title: string
+  weeks: Week[]
+}
+```
+
+### 🔘 Subcollection: `programs/{programId}/weeks/{weekNumber}`
+```ts
+Week {
+  weekNumber: number
+  days: WorkoutDay[]
+}
+```
+
+### 🔘 `WorkoutDay`
+```ts
+WorkoutDay {
+  dayOfWeek: string
+  focus: string
+  warmUp: ExerciseReference[]
+  main: ExerciseReference[]
+  warmDown: ExerciseReference[]
+}
+```
+
+### 🔘 Collection: `exercises`
+```ts
+Exercise {
+  exerciseId: string
+  name: string
+  detail: string
+  muscleGroups: string[]
+  equipment: string[]
+  imageUrl?: string
+  videoUrl?: string
+  coachingNotes?: string
+  type: "main" | "warm-up" | "warm-down"
+  defaultSets?: number
+  repsPerSet?: number[]
+  weightPerSet?: number[]
+  duration?: number // for warm-up
+}
+```
+
+---
+
+## ✅ Installed Dependencies
+
+```json
+"dependencies": {
+  "firebase": "^X.Y.Z",
+  "pinia": "^2.1.7",
+  "pinia-plugin-persistedstate": "^X.Y.Z",
+  "vue": "^3.4.27"
+},
+"devDependencies": {
+  "@vitejs/plugin-vue": "^5.0.5",
+  "eslint": "^X.Y.Z",
+  "eslint-plugin-vue": "^X.Y.Z",
+  "@vue/eslint-config-typescript": "^X.Y.Z",
+  "tailwindcss": "^3.4.4",
+  "typescript": "~5.4.5",
+  "vite": "^5.2.13"
+}
+```
+
+---
+
+## 🔜 Next Milestones
+
+- [ ] Add `LoginPage.vue` and protected route logic
+- [ ] Add `ProgramAuthor.vue` using Vue Flow canvas
+- [ ] Implement drag-and-drop for Weeks, Days, Exercises
+- [ ] Export authored data to Firestore (`programs/{id}`, `exercises/{id}`)
+- [ ] Integrate role-based access (`roles/{uid}` collection)
+- [ ] Create Firestore Seeder CLI or JSONL export support
+
+---
+
+## 📦 Environment Notes
+
+- Node.js: `v22.0.0` (with workaround for Tailwind v4 CLI by pinning to v3.4.4)
+- ESLint initialized via `npx eslint --init`
+- Project is configured as **TypeScript-first** with full linting, persisted state, and Firebase bootstrapped
+
+##################################################################################################
