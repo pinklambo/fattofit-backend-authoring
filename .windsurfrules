@@ -31,14 +31,59 @@ Platform: Admin-only authoring tool to define and manage structured workout cont
 
 ```
 src/
-├── assets/               # Static files (e.g., main.css for Tailwind)
-├── components/           # Vue component library
-├── stores/               # Pinia stores (auth, program authoring)
-├── views/ or pages/      # LoginPage.vue, ProgramAuthor.vue (future)
-├── firebase.ts           # Firebase app init (auth + firestore)
-├── main.ts               # App entry point
-└── App.vue               # Root UI wrapper
+├── assets/                # Static assets (icons, images, logos)
+├── boot/                  # Quasar/Vue plugin initializers (e.g., firebase.ts, pinia.ts)
+├── components/            # Reusable Vue components
+│   ├── auth/              # Login, Register, RoleSelector.vue
+│   ├── workout/           # Workout UI (e.g., WorkoutDayCard, ExerciseProgressDots)
+│   └── shared/            # Generic UI (e.g., BaseButton, ModalWrapper)
+├── composables/           # Reusable logic (e.g., useWorkout.ts, useAuth.ts, useCache.ts)
+├── layouts/               # Page layout wrappers (e.g., MainLayout.vue, AdminLayout.vue)
+├── pages/                 # Route-level views (e.g., ProgramWeekSummary.vue)
+│   ├── IndexPage.vue
+│   ├── LoginPage.vue
+│   ├── WorkoutDetail.vue
+│   └── AdminCreateUser.vue
+├── router/                # Vue Router configuration and guards
+│   └── index.ts
+├── services/              # API/Firestore abstraction logic
+│   ├── authService.ts
+│   ├── programService.ts
+│   ├── exerciseService.ts
+│   └── userService.ts
+├── stores/                # Pinia stores (persisted)
+│   ├── useAuthStore.ts
+│   ├── useProgramStore.ts
+│   ├── useExerciseStore.ts
+│   ├── useUserProgressStore.ts
+│   └── useUserPreferencesStore.ts
+├── types/                 # Shared TypeScript interfaces and types
+│   └── models.ts
+├── utils/                 # General utility functions (e.g., date.ts, firestoreHelpers.ts)
+├── App.vue
+├── main.ts
+└── quasar.conf.ts         # Quasar CLI config (if using Quasar CLI)
+
 ```
+
+---
+
+🔐 Roles-Based Access Control (Add to 
+.windsurfrules
+)
+Roles Collection:
+Firestore collection roles/{uid} maps each user to their role(s), e.g.:
+ts
+// Firestore: roles/{uid}
+{
+  role: "admin" // or "author", "viewer", etc.
+}
+Workflow:
+After login, the app fetches the user's role from Firestore.
+The Pinia auth store tracks the current user's role.
+Vue Router guards check both authentication and required role for protected routes.
+UI elements are conditionally shown/hidden based on user role.
+
 
 ---
 

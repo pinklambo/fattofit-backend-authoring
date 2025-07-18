@@ -10,9 +10,14 @@
     "lint": "eslint ./src --ext .js,.ts,.vue"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
     "firebase": "^12.0.0",
+    "minidenticons": "^4.2.1",
     "pinia": "^2.1.7",
-    "vue": "^3.4.27"
+    "pinia-plugin-persistedstate": "^2.4.0",
+    "vue": "^3.4.27",
+    "vue-router": "^4.5.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.31.0",

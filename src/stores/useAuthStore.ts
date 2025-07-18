@@ -1,0 +1,62 @@
+import { defineStore } from 'pinia'
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
+import type { User } from 'firebase/auth'
+import { doc, getDoc } from 'firebase/firestore'
+import { auth, db } from '../firebase'
+
+export const useAuthStore = defineStore('auth', {
+  state: () => ({
+    firebaseUser: null as User | null,
+    role: null as string | null,
+    loading: false,
+    error: null as string | null,
+  }),
+  actions: {
+    async login(email: string, password: string) {
+      this.loading = true
+      this.error = null
+      try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password)
+        this.firebaseUser = userCredential.user
+        await this.fetchUserRole()
+      } catch (err: any) {
+        this.error = (err as Error).message
+        this.firebaseUser = null
+        this.role = null
+      } finally {
+        this.loading = false
+      }
+    },
+    async logout() {
+      await signOut(auth)
+      this.firebaseUser = null
+      this.role = null
+      this.loading = false
+      this.error = null
+      console.log('Logout complete, state cleared')
+    },
+    bindAuthListener() {
+      onAuthStateChanged(auth, async (user) => {
+        this.firebaseUser = user
+        if (user) {
+          await this.fetchUserRole()
+        } else {
+          this.role = null
+        }
+      })
+    },
+    async fetchUserRole() {
+      if (!this.firebaseUser) {
+        this.role = null
+        return
+      }
+      const userDoc = await getDoc(doc(db, 'fattofit_users', this.firebaseUser.uid))
+      if (userDoc.exists()) {
+        this.role = userDoc.data().role
+      } else {
+        this.role = null
+      }
+    },
+  },
+  persist: true,
+})
