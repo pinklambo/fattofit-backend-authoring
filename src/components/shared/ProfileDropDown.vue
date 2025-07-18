@@ -49,7 +49,9 @@ const handleLogout = async () => {
           alt="Minidenticon avatar"
         />
         <span class="hidden lg:flex lg:items-center">
-          <span class="ml-4 text-sm/6 font-semibold text-gray-900" aria-hidden="true">Tom Cook</span>
+          <span class="ml-4 text-sm/6 font-semibold text-gray-900" aria-hidden="true">
+            {{ authStore.firebaseUser?.displayName || 'John Doe' }}
+          </span>
           <ChevronDownIcon class="ml-2 size-5 text-gray-400" aria-hidden="true" />
         </span>
       </MenuButton>

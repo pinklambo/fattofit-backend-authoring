@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import TopNav from '../components/shared/TopNav.vue'
+
 </script>
 
 <template>
-    <TopNav />
-    Content
+ <div class="p-8">
+  <h1>Dashboard</h1>
+ </div>
 </template>

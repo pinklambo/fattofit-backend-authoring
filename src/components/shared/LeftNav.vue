@@ -15,6 +15,7 @@ import {
   CalendarIcon,
   ChartPieIcon,
   Cog6ToothIcon,
+  PlusIcon,
   DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
@@ -23,12 +24,16 @@ import {
 } from '@heroicons/vue/24/outline'
 
 const navigation = [
-  { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-  { name: 'Team', href: '#', icon: UsersIcon, current: false },
-  { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-  { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-  { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
+  { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, current: false },
+  { name: 'New Program', href: '/programs/new', icon: PlusIcon, current: false },
+  { name: 'Programs', href: '#', icon: FolderIcon, current: false },
+  { name: 'Workouts', href: '#', icon: FolderIcon, current: false },
+  { name: 'Warm-Ups', href: '#', icon: FolderIcon, current: false },
+  { name: 'Exercises', href: '#', icon: FolderIcon, current: false },
+  { name: 'Cool-Downs', href: '#', icon: FolderIcon, current: false },
+  { name: 'Digital Assets', href: '#', icon: FolderIcon, current: false },
   { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
+  { name: 'Users', href: '#', icon: UsersIcon, current: false },
 ]
 const teams = [
   { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
@@ -76,7 +81,16 @@ const sidebarOpen = ref(false)
                     <li>
                       <ul role="list" class="-mx-2 space-y-1">
                         <li v-for="item in navigation" :key="item.name">
-                          <a :href="item.href" :class="[item.current ? 'bg-gray-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
+                          <router-link
+                            v-if="item.to"
+                            :to="item.to"
+                            class="group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold"
+                            :class="$route.path.startsWith(item.to) ? 'bg-gray-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600'"
+                          >
+                            <component :is="item.icon" :class="$route.path.startsWith(item.to) ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600', 'size-6 shrink-0'" aria-hidden="true" />
+                            {{ item.name }}
+                          </router-link>
+                          <a v-else :href="item.href" :class="[item.current ? 'bg-gray-50 text-indigo-600' : 'text-gray-700 hover:bg-gray-50 hover:text-indigo-600', 'group flex gap-x-3 rounded-md p-2 text-sm/6 font-semibold']">
                             <component :is="item.icon" :class="[item.current ? 'text-indigo-600' : 'text-gray-400 group-hover:text-indigo-600', 'size-6 shrink-0']" aria-hidden="true" />
                             {{ item.name }}
                           </a>

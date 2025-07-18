@@ -25,6 +25,18 @@ const routes = [
         name: 'Dashboard',
         component: Dashboard
       },
+      {
+        path: 'profile',
+        name: 'Profile',
+        component: () => import('../pages/ProfilePage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
+      {
+        path: 'programs/new',
+        name: 'ProgramNew',
+        component: () => import('../pages/ProgramNewPage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
       // Add other children here (e.g., ProgramAuthor)
     ]
   }
