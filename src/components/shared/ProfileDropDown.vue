@@ -39,13 +39,13 @@ const handleLogout = async () => {
         <img
           v-if="authStore.firebaseUser && authStore.firebaseUser.photoURL"
           :src="authStore.firebaseUser.photoURL"
-          class="size-8 rounded-full bg-gray-50"
+          class="size-8 rounded-full bg-gray-300"
           alt="Profile picture"
         />
         <img
           v-else-if="authStore.firebaseUser"
           :src="fallbackAvatar"
-          class="size-8 rounded-full bg-gray-50"
+          class="size-8 rounded-full bg-gray-300"
           alt="Minidenticon avatar"
         />
         <span class="hidden lg:flex lg:items-center">
@@ -79,3 +79,14 @@ const handleLogout = async () => {
       </transition>
     </Menu> 
 </template>>
+
+<style scoped>
+  minidenticon-svg svg {
+  border-radius: 50%;
+  background-color: grey;
+  height: 48px;
+  width: 48px;
+};
+
+</style>
+

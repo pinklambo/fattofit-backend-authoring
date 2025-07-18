@@ -3,20 +3,13 @@ import { ref } from 'vue'
 import {
   Dialog,
   DialogPanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
   TransitionChild,
   TransitionRoot,
 } from '@headlessui/vue'
 import {
-  Bars3Icon,
-  CalendarIcon,
   ChartPieIcon,
   Cog6ToothIcon,
   PlusIcon,
-  DocumentDuplicateIcon,
   FolderIcon,
   HomeIcon,
   UsersIcon,

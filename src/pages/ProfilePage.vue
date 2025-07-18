@@ -10,7 +10,7 @@ const role = computed(() => authStore.role)
 <template>
   <div class="p-8">
     <h1 class="text-2xl font-bold mb-6">Profile</h1>
-    <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+    <table class="min-w-[600px] bg-white border border-gray-200 rounded-lg">
       <tbody>
         <tr>
           <th class="text-left px-4 py-2 border-b font-medium text-gray-600">UID</th>
