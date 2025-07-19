@@ -23,6 +23,7 @@ const navigation = [
   { name: 'Workouts', href: '/workouts', icon: FolderIcon, current: false },
   { name: 'Warm-Ups', href: '/warmups', icon: FolderIcon, current: false },
   { name: 'Exercises', href: '/exercises', icon: FolderIcon, current: false },
+  { name: 'Muscle Categories', href: '/muscle-categories', icon: FolderIcon, current: false },
   { name: 'Cool-Downs', href: '/cooldowns', icon: FolderIcon, current: false },
   { name: 'Digital Assets', href: '#', icon: FolderIcon, current: false },
   { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
@@ -115,7 +116,7 @@ const sidebarOpen = ref(false)
         </div>
       </Dialog>
     </TransitionRoot>
-    <aside class="hidden lg:flex lg:flex-col w-72 border-r border-gray-200 bg-white">
+    <aside class="hidden lg:flex lg:flex-col w-64 border-r border-gray-200 bg-white">
       <div class="flex grow flex-col gap-y-5 overflow-y-auto px-6 pb-4">
         <div class="flex h-16 shrink-0 items-center">
           <img class="h-8 w-auto" src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600" alt="Your Company" />

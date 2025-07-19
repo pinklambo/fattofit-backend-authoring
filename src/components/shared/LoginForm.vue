@@ -41,7 +41,7 @@ const onLogin = async () => {
   <div class="flex min-h-full flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
     <div class="bg-white w-[520px] border border-gray-200 rounded-lg pb-16">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
+      <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">FatToFit Platform Login</h2>
     </div>
 
     <div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">

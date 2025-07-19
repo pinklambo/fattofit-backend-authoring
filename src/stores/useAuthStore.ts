@@ -1,8 +1,11 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
+import { auth, app, db } from '../firebase'
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth'
 import type { User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
-import { auth, db } from '../firebase'
+import { subscribeToMuscleCategories } from '../services/muscleCategoryService'
+import { useMuscleCategoryStore } from './useMuscleCategoryStore'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -10,6 +13,7 @@ export const useAuthStore = defineStore('auth', {
     role: null as string | null,
     loading: false,
     error: null as string | null,
+    muscleCategoryUnsubscribe: null as null | (() => void),
   }),
   actions: {
     async login(email: string, password: string) {
@@ -19,6 +23,16 @@ export const useAuthStore = defineStore('auth', {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
         this.firebaseUser = userCredential.user
         await this.fetchUserRole()
+        // Subscribe to muscle categories after login
+        const muscleCategoryStore = useMuscleCategoryStore()
+        if (this.muscleCategoryUnsubscribe) this.muscleCategoryUnsubscribe()
+        this.muscleCategoryUnsubscribe = subscribeToMuscleCategories(app, ({ type, doc }) => {
+          if (type === 'added' || type === 'modified') {
+            muscleCategoryStore.addOrUpdateCategory(doc)
+          } else if (type === 'removed') {
+            muscleCategoryStore.removeCategory(doc.id)
+          }
+        })
       } catch (err: any) {
         // Map error to friendly message
         const { mapFirebaseAuthError } = await import('../utils/firebaseErrorMap')
@@ -33,6 +47,12 @@ export const useAuthStore = defineStore('auth', {
       await signOut(auth)
       this.firebaseUser = null
       this.role = null
+      this.clearStores()
+      // Unsubscribe from muscle categories
+      if (this.muscleCategoryUnsubscribe) {
+        this.muscleCategoryUnsubscribe()
+        this.muscleCategoryUnsubscribe = null
+      }
       this.loading = false
       this.error = null
       console.log('Logout complete, state cleared')

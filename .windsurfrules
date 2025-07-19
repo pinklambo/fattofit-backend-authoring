@@ -2,6 +2,54 @@
 # FatToFit Program Authoring Platform — .windsurfrules
 ##################################################################################################
 
+##################################################################################################
+# 🔗 Cross-Codebase Awareness
+##################################################################################################
+
+## 💡 Purpose
+This section ensures shared data models and caching logic remain aligned across all FatToFit codebases:
+- `fattofit-backend` (Authoring UI)
+- `fattofit-frontend` (User-facing Capacitor app)
+- `fattofit-seeder` (Firestore seeding CLI)
+
+---
+
+## 📦 Codebase Links
+
+| Name                | Path / Repo              | Purpose                                  |
+|---------------------|---------------------------|-------------------------------------------|
+| `fattofit-frontend` | `../fattofit-frontend`    | Capacitor app (Vue 3 + Pinia + Firebase) |
+| `fattofit-seeder`   | `../fattofit-seeder`      | CLI to seed Firestore content            |
+
+---
+
+## 🧩 Shared Models
+
+All three projects use the following data interfaces:
+
+- `Program`, `Week`, `WorkoutDay`, `Exercise`, `UserProgress`, `UserPreferences`
+- Stored in: `types/models.ts` (each project should reference a canonical version)
+
+**🔁 Canonical model source:**  
+> Consider storing shared types in a central package like `@fattofit/models`  
+> (using a local workspace or NPM registry)
+
+---
+
+## 🧠 Shared Logic Expectations
+
+### 🔄 Content Caching Logic (Frontend / Backend Sync)
+- Based on `config/content` document:
+```ts
+{
+  contentVersion: number,
+  updatedAt: Timestamp
+}
+
+##################################################################################################
+# 📚 FatToFit Program Authoring Platform Project Metadata
+##################################################################################################
+
 📘 Introduction  
 App Name: FatToFit Program Authoring  
 Version: 0.1.0  
@@ -134,52 +182,113 @@ UI elements are conditionally shown/hidden based on user role.
 
 ## 🧠 Firestore Data Model (Authoring Source of Truth)
 
-### 🔘 Collection: `programs`
-```ts
-Program {
-  programId: string
-  title: string
-  weeks: Week[]
-}
-```
+data_model:
+  collections:
+    - fattofit_program:
+        fields:
+          - programId: string
+          - title: string
+          - durationWeeks: number
+          - daysPerWeek: number
+          - weeks: array(object) # See below for week/day structure
+          - createdAt: timestamp
+          - updatedAt: timestamp
 
-### 🔘 Subcollection: `programs/{programId}/weeks/{weekNumber}`
-```ts
-Week {
-  weekNumber: number
-  days: WorkoutDay[]
-}
-```
+    - fattofit_week:
+        parent: fattofit_program
+        fields:
+          - weekNumber: number
+          - days: array(object) # inline representation of WorkoutDay[]
+          - createdAt: timestamp
+          - updatedAt: timestamp
 
-### 🔘 `WorkoutDay`
-```ts
-WorkoutDay {
-  dayOfWeek: string
-  focus: string
-  warmUp: ExerciseReference[]
-  main: ExerciseReference[]
-  warmDown: ExerciseReference[]
-}
-```
+    - workout_day:
+        fields:
+          - dayOfWeek: string            # e.g. 'Monday'
+          - focus: string                # e.g. 'Upper Body Push + Cardio'
+          - warmUp: array(object)        # array of ExerciseReference
+          - main: array(object)          # array of ExerciseReference
+          - warmDown: array(object)      # array of ExerciseReference
 
-### 🔘 Collection: `exercises`
-```ts
-Exercise {
-  exerciseId: string
-  name: string
-  detail: string
-  muscleGroups: string[]
-  equipment: string[]
-  imageUrl?: string
-  videoUrl?: string
-  coachingNotes?: string
-  type: "main" | "warm-up" | "warm-down"
-  defaultSets?: number
-  repsPerSet?: number[]
-  weightPerSet?: number[]
-  duration?: number // for warm-up
-}
-```
+    - muscle_category:
+      fields:
+        - id: string            # canonical ID (e.g. 'upper-body')
+        - label: string         # display name for UI (e.g. 'Upper Body')
+        - icon: string          # optional UI icon (e.g. 'mdi-arm-flex')
+        - sortOrder: number     # for controlling UI sort/grouping
+        - createdAt: timestamp
+        - updatedAt: timestamp
+
+    - muscle_group:
+      fields:
+        - id: string            # canonical ID (e.g. 'chest')
+        - label: string         # display name (e.g. 'Chest')
+        - categoryId: string    # FK reference to `muscle_category.id`
+        - createdAt: timestamp
+        - updatedAt: timestamp
+          
+    - fattofit_exercise:
+      fields:
+        - exerciseId: string
+        - type: string # ['main', 'warm-up', 'warm-down']
+        - name: string
+        - detail: string
+        - muscleGroups: array(string)
+        - equipment: array(string)
+        - videoUrl: string
+        - imageUrl: string
+        - coachingNotes: string
+        - defaultSets: number          # only for 'main'
+        - defaultReps: number          # only for 'main'
+        - defaultWeight: number        # only for 'main'
+        - weightPerSet: array(number)  # only for 'main'
+        - repsPerSet: array(number)    # only for 'main'
+        - duration: number             # only for 'warm-up'
+        - createdAt: timestamp
+        - updatedAt: timestamp
+
+    - fattofit_warmup:
+        fields:
+          - exerciseId: string
+          - name: string
+          - detail: string
+          - muscleGroups: array(string)
+          - equipment: array(string)
+          - videoUrl: string
+          - imageUrl: string
+          - coachingNotes: string
+          - type: string
+          - duration: number
+
+    - fattofit_warmdown:
+        fields:
+          - exerciseId: string
+          - name: string
+          - detail: string
+          - muscleGroups: array(string)
+          - equipment: array(string)
+          - videoUrl: string
+          - imageUrl: string
+          - coachingNotes: string
+          - type: string
+          - duration: number
+
+    - fattofit_user:
+      fields:
+        - uid: string                # Firebase UID (used as doc ID)
+        - email: string
+        - name: string
+        - role: string               # 'superadmin', 'admin', 'user', etc.
+        - createdAt: timestamp
+        - updatedAt: timestamp
+
+    - fattofit_app_meta:
+        fields:
+          - id: string
+          - name: string
+          - appVersion: string
+          - contentVersion: string
+          - updatedAt: timestamp
 
 ---
 
