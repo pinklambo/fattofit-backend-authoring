@@ -6,6 +6,7 @@ import type { User } from 'firebase/auth'
 import { doc, getDoc } from 'firebase/firestore'
 import { subscribeToMuscleCategories } from '../services/muscleCategoryService'
 import { useMuscleCategoryStore } from './useMuscleCategoryStore'
+import { useExerciseStore } from './useExerciseStore'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -23,16 +24,10 @@ export const useAuthStore = defineStore('auth', {
         const userCredential = await signInWithEmailAndPassword(auth, email, password)
         this.firebaseUser = userCredential.user
         await this.fetchUserRole()
-        // Subscribe to muscle categories after login
         const muscleCategoryStore = useMuscleCategoryStore()
-        if (this.muscleCategoryUnsubscribe) this.muscleCategoryUnsubscribe()
-        this.muscleCategoryUnsubscribe = subscribeToMuscleCategories(app, ({ type, doc }) => {
-          if (type === 'added' || type === 'modified') {
-            muscleCategoryStore.addOrUpdateCategory(doc)
-          } else if (type === 'removed') {
-            muscleCategoryStore.removeCategory(doc.id)
-          }
-        })
+        muscleCategoryStore.subscribe()
+        const exerciseStore = useExerciseStore()
+        exerciseStore.subscribe()
       } catch (err: any) {
         // Map error to friendly message
         const { mapFirebaseAuthError } = await import('../utils/firebaseErrorMap')

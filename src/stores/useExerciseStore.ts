@@ -2,6 +2,9 @@ import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { Exercise } from '../types/models';
 
+import { app } from '../firebase';
+import { subscribeToExercises } from '../services/exerciseService';
+
 export const useExerciseStore = defineStore('exercise', () => {
   const exercises = ref<Exercise[]>([]);
   let unsubscribe: (() => void) | null = null;
@@ -22,10 +25,18 @@ export const useExerciseStore = defineStore('exercise', () => {
     }
   }
 
+  function subscribe() {
+    if (unsubscribe) unsubscribe();
+    unsubscribe = subscribeToExercises(app, (newExercises) => {
+      exercises.value = newExercises;
+    });
+  }
+
   return {
     exercises,
     setExercises,
     setUnsubscribe,
     clear,
+    subscribe,
   };
 });
