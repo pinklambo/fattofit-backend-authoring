@@ -8,6 +8,14 @@ export interface MuscleCategory {
   updatedAt: any;
 }
 
+export interface MuscleGroup {
+  id: string;
+  label: string;
+  categoryId: string;
+  createdAt: any;
+  updatedAt: any;
+}
+
 export interface Exercise {
   exerciseId: string;
   name: string;

@@ -7,6 +7,7 @@ import { doc, getDoc } from 'firebase/firestore'
 import { subscribeToMuscleCategories } from '../services/muscleCategoryService'
 import { useMuscleCategoryStore } from './useMuscleCategoryStore'
 import { useExerciseStore } from './useExerciseStore'
+import { useMuscleGroupStore } from './useMuscleGroupStore'
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -28,6 +29,8 @@ export const useAuthStore = defineStore('auth', {
         muscleCategoryStore.subscribe()
         const exerciseStore = useExerciseStore()
         exerciseStore.subscribe()
+        const muscleGroupStore = useMuscleGroupStore()
+        muscleGroupStore.subscribe()
       } catch (err: any) {
         // Map error to friendly message
         const { mapFirebaseAuthError } = await import('../utils/firebaseErrorMap')

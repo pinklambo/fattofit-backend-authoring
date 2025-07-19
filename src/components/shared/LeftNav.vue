@@ -24,6 +24,7 @@ const navigation = [
   { name: 'Warm-Ups', href: '/warmups', icon: FolderIcon, current: false },
   { name: 'Exercises', href: '/exercises', icon: FolderIcon, current: false },
   { name: 'Muscle Categories', href: '/muscle-categories', icon: FolderIcon, current: false },
+  { name: 'Muscle Groups', href: '/muscle-groups', icon: FolderIcon, current: false },
   { name: 'Cool-Downs', href: '/cooldowns', icon: FolderIcon, current: false },
   { name: 'Digital Assets', href: '#', icon: FolderIcon, current: false },
   { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },

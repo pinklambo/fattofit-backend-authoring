@@ -62,6 +62,12 @@ const routes = [
         meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] } 
       },
       {
+        path: 'muscle-groups',
+        name: 'MuscleGroupIndex',
+        component: () => import('../pages/indexPages/MuscleGroupPage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
+      {
         path: 'warmups',
         name: 'WarmUpIndex',
         component: () => import('../pages/indexPages/WarmUpIndexPage.vue'),
