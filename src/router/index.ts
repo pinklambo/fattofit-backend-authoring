@@ -37,6 +37,36 @@ const routes = [
         component: () => import('../pages/ProgramNewPage.vue'),
         meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
       },
+      {
+        path: 'programs',
+        name: 'ProgramIndex',
+        component: () => import('../pages/indexPages/ProgramIndexPage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
+      {
+        path: 'workouts',
+        name: 'WorkoutIndex',
+        component: () => import('../pages/indexPages/WorkoutIndexPage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
+      {
+        path: 'exercises',
+        name: 'ExerciseIndex',
+        component: () => import('../pages/indexPages/ExerciseIndexPage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
+      {
+        path: 'warmups',
+        name: 'WarmUpIndex',
+        component: () => import('../pages/indexPages/WarmUpIndexPage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
+      {
+        path: 'cooldowns',
+        name: 'CoolDownIndex',
+        component: () => import('../pages/indexPages/CoolDownIndexPage.vue'),
+        meta: { requiresAuth: true, allowedRoles: ['admin', 'god'] },
+      },
       // Add other children here (e.g., ProgramAuthor)
     ]
   }
