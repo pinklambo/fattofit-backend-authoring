@@ -20,7 +20,9 @@ export const useAuthStore = defineStore('auth', {
         this.firebaseUser = userCredential.user
         await this.fetchUserRole()
       } catch (err: any) {
-        this.error = (err as Error).message
+        // Map error to friendly message
+        const { mapFirebaseAuthError } = await import('../utils/firebaseErrorMap')
+        this.error = mapFirebaseAuthError(err)
         this.firebaseUser = null
         this.role = null
       } finally {

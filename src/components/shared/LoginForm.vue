@@ -5,8 +5,8 @@ import { useRouter } from 'vue-router'
 import { sendPasswordResetEmail } from 'firebase/auth'
 import { auth } from '../../firebase'
 
-const email = ref('god_1@fattofit.com')
-const password = ref('Password123!')
+const email = ref('diamondhands@pinklambo.io')
+const password = ref('fatPassword123!')
 const authStore = useAuthStore()
 const router = useRouter()
 
@@ -22,7 +22,8 @@ const handleReset = async () => {
     await sendPasswordResetEmail(auth, resetEmail.value)
     resetSuccess.value = true
   } catch (err: any) {
-    resetError.value = err.message || 'Failed to send reset email.'
+    const { mapFirebaseAuthError } = await import('../../utils/firebaseErrorMap')
+    resetError.value = mapFirebaseAuthError(err)
   }
 }
 
@@ -37,7 +38,8 @@ const onLogin = async () => {
 </script>
 
 <template>
-  <div class="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 ">
+  <div class="flex min-h-full flex-1 flex-col items-center justify-center px-6 py-12 lg:px-8">
+    <div class="bg-white w-[520px] border border-gray-200 rounded-lg pb-16">
     <div class="sm:mx-auto sm:w-full sm:max-w-sm">
       <h2 class="mt-10 text-center text-2xl/9 font-bold tracking-tight text-gray-900">Sign in to your account</h2>
     </div>
@@ -66,8 +68,9 @@ const onLogin = async () => {
         <div>
           <button :disabled="authStore.loading" type="submit" class="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm/6 font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Sign in</button>
         </div>
-        <p v-if="authStore.error" class="text-red-500 mt-2 text-sm text-center">{{ authStore.error }}</p>
+          <p v-if="authStore.error" class="text-red-500 mt-2 text-sm text-center">&nbsp;{{ authStore.error }}</p>
       </form>
+
     </div>
 
     <transition name="fade">
@@ -85,5 +88,6 @@ const onLogin = async () => {
         </div>
       </div>
     </transition>
-  </div>  
+  </div> 
+</div>
 </template>
