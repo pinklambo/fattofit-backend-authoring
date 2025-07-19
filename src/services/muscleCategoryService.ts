@@ -1,5 +1,5 @@
 import type { FirebaseApp } from 'firebase/app'
-import { getFirestore, collection, onSnapshot } from 'firebase/firestore'
+import { getFirestore, collection, onSnapshot, doc, updateDoc } from 'firebase/firestore'
 import type { QuerySnapshot, DocumentData } from 'firebase/firestore'
 import type { MuscleCategory } from '../types/models'
 
@@ -13,4 +13,10 @@ export function subscribeToMuscleCategories(app: FirebaseApp, onChange: (change:
     })
   })
   return unsubscribe
+}
+
+export async function updateMuscleCategory(app: FirebaseApp, categoryId: string, updates: Partial<MuscleCategory>): Promise<void> {
+  const db = getFirestore(app)
+  const categoryRef = doc(db, 'fattofit_muscle_category', categoryId)
+  await updateDoc(categoryRef, updates)
 }
